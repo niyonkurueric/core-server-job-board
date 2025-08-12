@@ -10,7 +10,8 @@
     "test-db": "node src/database/testConnection.js",
     "migrate": "node src/database/migrations/migrate.js",
     "seed": "node src/database/seeds/seed_admin.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
+    "prod": "pnpm run migrate && pnpm run seed && pnpm run dev"
   },
   "keywords": [],
   "author": "",

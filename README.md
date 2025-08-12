@@ -110,3 +110,7 @@ See `.env.example` for all required environment variables.
 - `src/database/` — Migrations and seeds
 - `src/utils/` — Utility functions
 - `tests/` — Jest/Supertest test suites
+
+
+<img width="1439" height="900" alt="Screenshot 2025-08-12 at 17 12 19" src="https://github.com/user-attachments/assets/09849293-3a7d-41e6-af1c-a9e5afa4057c" />
+<img width="1435" height="891" alt="Screenshot 2025-08-12 at 17 12 06" src="https://github.com/user-attachments/assets/ae14a3e2-e5b9-47f5-9db6-f4386c80f705" />

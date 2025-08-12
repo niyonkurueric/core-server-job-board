@@ -30,9 +30,9 @@ Authorization: Bearer <admin-jwt-token>
 }
 ```
 
-# ISCO Job Board Portal
+# Job Board Portal
 
-Welcome to the ISCO Job Board Portal backend! This project provides a robust, secure, and scalable API for managing job postings, applications, and user authentication for both administrators and job seekers.
+Welcome to the Job Board Portal backend! This project provides a robust, secure, and scalable API for managing job postings, applications, and user authentication for both administrators and job seekers.
 
 ## Features
 

@@ -16,10 +16,17 @@ export const jobSchema = Joi.object({
   description: Joi.string().min(10).required(),
   company: Joi.string().allow('', null),
   location: Joi.string().allow('', null),
+  deadline: Joi.date().iso().required().messages({
+    'any.required': 'Job deadline (end date) is required',
+    'date.base': 'Job deadline must be a valid date',
+    'date.format': 'Job deadline must be in ISO format (YYYY-MM-DD)',
+  }),
 });
 
 export const applicationSchema = Joi.object({
   jobId: Joi.number().integer().required(),
-  cover_letter: Joi.string().max(10000).allow('', null), // allow long HTML/text
+  cover_letter: Joi.string().max(50000).allow('', null).messages({
+    'string.max': 'Cover letter must be at most 50,000 characters',
+  }), // allow very long HTML/text
   cv_url: Joi.string().uri().allow('', null),
 });

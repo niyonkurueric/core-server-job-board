@@ -3,6 +3,19 @@ import { applicationSchema } from '../validations/validators.js';
 import { ok, fail } from '../utils/response.js';
 import applicationsService from '../services/applications.service.js';
 
+export const listAllApplications = async (req, res, next) => {
+  try {
+    const { fromDate, toDate } = req.query;
+    const rows = await applicationsService.getAllApplications({
+      fromDate,
+      toDate,
+    });
+    return ok(res, rows);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const apply = async (req, res, next) => {
   try {
     const { error, value } = applicationSchema.validate(req.body);
@@ -49,8 +62,10 @@ export const apply = async (req, res, next) => {
 
 export const getByJob = async (req, res, next) => {
   try {
+    const { fromDate, toDate } = req.query;
     const rows = await applicationsService.getApplicationsByJob(
-      req.params.jobId
+      req.params.jobId,
+      { fromDate, toDate }
     );
     return ok(res, rows);
   } catch (err) {
@@ -79,10 +94,15 @@ export const listJobsWithApplications = async (req, res, next) => {
         const applications = await applicationsService.getApplicationsByJob(
           job.id
         );
-        return { ...job, applications };
+        if (applications && applications.length > 0) {
+          return { ...job, applications };
+        }
+        return null;
       })
     );
-    return ok(res, jobsWithApps);
+    // Filter out jobs with no applications
+    const filteredJobs = jobsWithApps.filter((job) => job !== null);
+    return ok(res, filteredJobs);
   } catch (err) {
     next(err);
   }

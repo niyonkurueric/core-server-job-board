@@ -14,16 +14,27 @@ class ApplicationsService {
     });
   }
 
-  getApplicationsByJob(jobId) {
+  getApplicationsByJob(jobId, { fromDate, toDate } = {}) {
+    let query = `SELECT a.*, u.email as applicant, u.name as applicant_name, j.title as job_title, j.company as job_company
+      FROM applications a
+      JOIN users u ON a.userId = u.id
+      JOIN jobs j ON a.jobId = j.id
+      WHERE a.jobId = ?`;
+    const params = [jobId];
+    if (fromDate) {
+      query += ' AND a.created_at >= ?';
+      params.push(fromDate);
+    }
+    if (toDate) {
+      query += ' AND a.created_at <= ?';
+      params.push(toDate);
+    }
+    query += ' ORDER BY a.created_at DESC';
     return new Promise((resolve, reject) => {
-      openDb.all(
-        `SELECT a.*, u.email as applicant FROM applications a JOIN users u ON a.userId = u.id WHERE a.jobId = ? ORDER BY a.created_at DESC`,
-        [jobId],
-        (err, rows) => {
-          if (err) return reject(err);
-          resolve(rows);
-        }
-      );
+      openDb.all(query, params, (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows);
+      });
     });
   }
 

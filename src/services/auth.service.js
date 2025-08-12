@@ -6,14 +6,20 @@ import { verifyFirebaseToken } from './firebase.service.js';
 export const register = async ({ name, email, password }) => {
   const hashed = await bcrypt.hash(password, 10);
   return new Promise((resolve, reject) => {
-    openDb.run(
-      `INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)`,
-      [name, email, hashed, 'user'],
-      function (err) {
-        if (err) return reject(err);
-        resolve({ id: this.lastID, name, email, role: 'user' });
+    openDb.get(`SELECT id FROM users WHERE email = ?`, [email], (err, user) => {
+      if (err) return reject(err);
+      if (user) {
+        return reject(new Error('User with this email already exists'));
       }
-    );
+      openDb.run(
+        `INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)`,
+        [name, email, hashed, 'user'],
+        function (err) {
+          if (err) return reject(err);
+          resolve({ id: this.lastID, name, email, role: 'user' });
+        }
+      );
+    });
   });
 };
 

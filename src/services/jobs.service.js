@@ -36,11 +36,18 @@ class JobsService {
     });
   }
 
-  createJob({ title, description, company, location, created_by }) {
+  createJob({ title, description, company, location, deadline, created_by }) {
     return new Promise((resolve, reject) => {
       openDb.run(
-        `INSERT INTO jobs (title, description, company, location, created_by) VALUES (?, ?, ?, ?, ?)`,
-        [title, description, company || '', location || '', created_by],
+        `INSERT INTO jobs (title, description, company, location, deadline, status, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [
+          title,
+          description,
+          company || '',
+          location || '',
+          deadline,
+          created_by,
+        ],
         function (err) {
           if (err) return reject(err);
           resolve({
@@ -49,6 +56,7 @@ class JobsService {
             description,
             company,
             location,
+            deadline,
             created_by,
           });
         }
@@ -56,11 +64,11 @@ class JobsService {
     });
   }
 
-  updateJob(id, { title, description, company, location }) {
+  updateJob(id, { title, description, company, location, deadline }) {
     return new Promise((resolve, reject) => {
       openDb.run(
-        `UPDATE jobs SET title = ?, description = ?, company = ?, location = ? WHERE id = ?`,
-        [title, description, company || '', location || '', id],
+        `UPDATE jobs SET title = ?, description = ?, company = ?, location = ?, deadline = ? WHERE id = ?`,
+        [title, description, company || '', location || '', deadline, id],
         function (err) {
           if (err) return reject(err);
           resolve(this.changes);

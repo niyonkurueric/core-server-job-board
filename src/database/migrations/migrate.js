@@ -3,9 +3,8 @@ import path from 'path';
 import db from '../../config/db.js';
 
 const migrationFile = path.resolve(
-  'src/database/migrations/001_create_users_table.sql'
+  'src/database/migrations/004_recreate_all_tables.sql'
 );
-
 const sql = fs.readFileSync(migrationFile, 'utf8');
 
 db.exec(sql, (err) => {

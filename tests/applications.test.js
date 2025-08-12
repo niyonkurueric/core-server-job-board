@@ -7,13 +7,11 @@ describe('Applications Endpoints', () => {
 
   beforeAll(async () => {
     // Register and login a user
-    await request(app)
-      .post('/api/auth/register')
-      .send({
-        name: 'Applicant',
-        email: 'applicant@example.com',
-        password: 'applicantpass',
-      });
+    await request(app).post('/api/auth/register').send({
+      name: 'Applicant',
+      email: 'applicant@example.com',
+      password: 'applicantpass',
+    });
     const loginRes = await request(app)
       .post('/api/auth/login')
       .send({ email: 'applicant@example.com', password: 'applicantpass' });

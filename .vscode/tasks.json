@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "Run migration",
+      "command": "pnpm run migrate",
+      "group": "build",
+      "problemMatcher": [],
+      "isBackground": false
+    }
+  ]
+}

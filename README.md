@@ -2,6 +2,10 @@
 
 Admins can access project analytics at:
 
+ admin credations 
+email : admin@example.com
+password : admin123
+
 ```
 GET /api/analytics
 Authorization: Bearer <admin-jwt-token>

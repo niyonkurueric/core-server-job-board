@@ -5,7 +5,8 @@ import { requireRole } from '../middlewares/role.middleware.js';
 
 const router = express.Router();
 
-router.get('/', jobsCtrl.listJobs);
+router.get('/', authenticate, requireRole('admin'), jobsCtrl.listJobs);
+router.get('/published', jobsCtrl.listPublishedJobs);
 router.get('/:id', jobsCtrl.getJob);
 
 router.post('/', authenticate, requireRole('admin'), jobsCtrl.createJob);

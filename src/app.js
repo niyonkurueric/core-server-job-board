@@ -15,9 +15,6 @@ app.use(cors());
 
 app.use('/api', routes);
 
-// health
-app.get('/health', (req, res) => res.json({ ok: true }));
-
 // Swagger docs
 setupSwagger(app);
 

@@ -66,7 +66,12 @@ export const login = async ({ email, password, idToken }) => {
               );
               resolve({
                 token,
-                user: { id: user.id, email: user.email, role: user.role },
+                user: {
+                  id: user.id,
+                  email: user.email,
+                  role: user.role,
+                  name: user.name,
+                },
               });
             }
           }
@@ -95,7 +100,12 @@ export const login = async ({ email, password, idToken }) => {
         );
         resolve({
           token,
-          user: { id: user.id, email: user.email, role: user.role },
+          user: {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            name: user.name,
+          },
         });
       }
     );

@@ -60,9 +60,11 @@ export const apply = async (req, res, next) => {
           </div>
         `,
       });
-      console.log(`✅ Application confirmation email sent to ${req.user.email}`);
     } catch (mailErr) {
-      console.error('Failed to send application confirmation email:', mailErr.message);
+      console.error(
+        'Failed to send application confirmation email:',
+        mailErr.message
+      );
     }
 
     // Send notification email to admin (if admin email is configured)
@@ -86,10 +88,13 @@ export const apply = async (req, res, next) => {
             </div>
           `,
         });
-        console.log(`✅ Admin notification email sent to ${adminEmail}`);
+        console.log(`Admin notification email sent to ${adminEmail}`);
       }
     } catch (mailErr) {
-      console.error('Failed to send admin notification email:', mailErr.message);
+      console.error(
+        'Failed to send admin notification email:',
+        mailErr.message
+      );
     }
 
     return ok(res, result, 201);

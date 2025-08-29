@@ -11,6 +11,7 @@
     "test-db": "node src/database/testConnection.js",
     "test-vercel": "node test-vercel.js",
     "test-email": "node test-email.js",
+    "test-job-application": "node test-job-application.js",
     "migrate": "node src/database/migrations/migrate.js",
     "seed": "node src/database/seeds/seed_admin.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand"

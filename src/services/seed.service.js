@@ -95,7 +95,8 @@ const seedSampleJobs = () => {
             title: 'Software Engineer',
             company: 'Tech Corp',
             location: 'Remote',
-            description: 'Full-stack development role with JavaScript, Node.js, and React. Join our team to build amazing web applications.',
+            description:
+              'Full-stack development role with JavaScript, Node.js, and React. Join our team to build amazing web applications.',
             deadline: '2024-12-31',
             status: 'active',
           },
@@ -103,7 +104,8 @@ const seedSampleJobs = () => {
             title: 'Data Analyst',
             company: 'Data Inc',
             location: 'New York',
-            description: 'Data analysis and visualization role. Work with Python, SQL, and Tableau to extract insights from data.',
+            description:
+              'Data analysis and visualization role. Work with Python, SQL, and Tableau to extract insights from data.',
             deadline: '2024-12-31',
             status: 'active',
           },

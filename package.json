@@ -10,6 +10,7 @@
     "build": "echo 'No build step required'",
     "test-db": "node src/database/testConnection.js",
     "test-vercel": "node test-vercel.js",
+    "test-email": "node test-email.js",
     "migrate": "node src/database/migrations/migrate.js",
     "seed": "node src/database/seeds/seed_admin.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand"

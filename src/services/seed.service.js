@@ -8,7 +8,7 @@ export const seedDatabase = () => {
   return new Promise((resolve, reject) => {
     const isVercel =
       process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
-    
+
     if (!isVercel) {
       resolve(); // Don't seed on local development
       return;
@@ -16,35 +16,37 @@ export const seedDatabase = () => {
 
     // Always try to seed, ignore errors for existing data
     Promise.all([
-      seedAdminUser().catch(err => {
+      seedAdminUser().catch((err) => {
         if (err.message.includes('UNIQUE constraint failed')) {
           console.log('Admin user already exists, skipping...');
         } else {
           console.error('Error seeding admin user:', err.message);
         }
       }),
-      seedSampleJobs().catch(err => {
+      seedSampleJobs().catch((err) => {
         if (err.message.includes('UNIQUE constraint failed')) {
           console.log('Sample jobs already exist, skipping...');
         } else {
           console.error('Error seeding sample jobs:', err.message);
         }
+      }),
+    ])
+      .then(() => {
+        console.log('Database seeding completed on Vercel');
+        resolve();
       })
-    ]).then(() => {
-      console.log('Database seeding completed on Vercel');
-      resolve();
-    }).catch(err => {
-      console.error('Database seeding failed:', err.message);
-      // Don't reject, just resolve to continue
-      resolve();
-    });
+      .catch((err) => {
+        console.error('Database seeding failed:', err.message);
+        // Don't reject, just resolve to continue
+        resolve();
+      });
   });
 };
 
 const seedAdminUser = () => {
   return new Promise((resolve, reject) => {
     const hashedPassword = bcrypt.hashSync('admin123', 10);
-    
+
     const adminUser = {
       email: 'admin@example.com',
       password: hashedPassword,
@@ -93,20 +95,16 @@ const seedSampleJobs = () => {
             title: 'Software Engineer',
             company: 'Tech Corp',
             location: 'Remote',
-            description: 'Full-stack development role',
-            requirements: 'JavaScript, Node.js, React',
-            salary: '80000-120000',
-            type: 'Full-time',
+            description: 'Full-stack development role with JavaScript, Node.js, and React. Join our team to build amazing web applications.',
+            deadline: '2024-12-31',
             status: 'active',
           },
           {
             title: 'Data Analyst',
             company: 'Data Inc',
             location: 'New York',
-            description: 'Data analysis and visualization',
-            requirements: 'Python, SQL, Tableau',
-            salary: '60000-90000',
-            type: 'Full-time',
+            description: 'Data analysis and visualization role. Work with Python, SQL, and Tableau to extract insights from data.',
+            deadline: '2024-12-31',
             status: 'active',
           },
         ];
@@ -114,20 +112,18 @@ const seedSampleJobs = () => {
         let completed = 0;
         const total = sampleJobs.length;
 
-                sampleJobs.forEach((job) => {
+        sampleJobs.forEach((job) => {
           db.run(
             `
-              INSERT INTO jobs (title, company, location, description, requirements, salary, type, status, created_at) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+              INSERT INTO jobs (title, company, location, description, deadline, status, created_at) 
+              VALUES (?, ?, ?, ?, ?, ?, ?)
             `,
             [
               job.title,
               job.company,
               job.location,
               job.description,
-              job.requirements,
-              job.salary,
-              job.type,
+              job.deadline,
               job.status,
               new Date().toISOString(),
             ],

@@ -1,4 +1,4 @@
-import openDb from '../config/db.js';
+import openDb from '../config/db.vercel.js';
 
 class ApplicationsService {
   applyToJob({ userId, jobId, cover_letter, cv_url }) {

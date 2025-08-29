@@ -1,4 +1,4 @@
-import openDb from '../config/db.js';
+import openDb from '../config/db.vercel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 

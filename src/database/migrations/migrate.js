@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import db from '../../config/db.js';
+import db from '../../config/db.vercel.js';
 
 const migrationFile = path.resolve(
   'src/database/migrations/004_recreate_all_tables.sql'

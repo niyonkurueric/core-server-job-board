@@ -1,4 +1,4 @@
-import db from '../../config/db.js';
+import db from '../../config/db.vercel.js';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 dotenv.config();

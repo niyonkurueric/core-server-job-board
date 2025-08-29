@@ -1,4 +1,4 @@
-import openDb from '../config/db.js';
+import openDb from '../config/db.vercel.js';
 import * as authService from '../services/auth.service.js';
 import { registerSchema, loginSchema } from '../validations/validators.js';
 import { ok, fail } from '../utils/response.js';

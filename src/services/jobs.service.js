@@ -9,26 +9,48 @@ class JobsService {
     status = '',
   } = {}) {
     const offset = (page - 1) * pageSize;
-    let query = `SELECT * FROM jobs`;
     const params = [];
     const filters = [];
+
+    // Base query with LEFT JOIN to count applicants
+    let query = `
+    SELECT 
+      j.*, 
+      COUNT(a.id) AS totalApplicants
+    FROM jobs j
+    LEFT JOIN applications a ON a.jobId = j.id
+  `;
+
+    // Filters
     if (search) {
-      filters.push('title LIKE ?');
-      params.push(`%${search}%`);
+      filters.push('(j.title ILIKE ? OR j.company ILIKE ?)');
+      params.push(`%${search}%`, `%${search}%`);
     }
+
     if (location) {
-      filters.push('location = ?');
+      filters.push('j.location = ?');
       params.push(location);
     }
+
     if (status) {
-      filters.push('status = ?');
-      params.push(status);
+      if (status === 'published') {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        filters.push('j.status = ? AND j.deadline >= ?');
+        params.push('published', today.getTime());
+      } else {
+        filters.push('j.status = ?');
+        params.push(status);
+      }
     }
+
     if (filters.length) {
       query += ' WHERE ' + filters.join(' AND ');
     }
-    query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+
+    query += ' GROUP BY j.id ORDER BY j.created_at DESC LIMIT ? OFFSET ?';
     params.push(pageSize, offset);
+
     return new Promise((resolve, reject) => {
       openDb.all(query, params, (err, rows) => {
         if (err) return reject(err);

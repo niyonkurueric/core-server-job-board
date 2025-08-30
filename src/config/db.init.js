@@ -22,19 +22,24 @@ export const initializeDatabase = () => {
       try {
         const sql = fs.readFileSync(migrationFile, 'utf8');
 
-                // Split SQL into individual statements
+        // Split SQL into individual statements
         const statements = sql.split(';').filter((stmt) => stmt.trim());
-        
+
         let completed = 0;
         const total = statements.length;
-        
+
         statements.forEach((statement, index) => {
           if (statement.trim()) {
             db.run(statement, (err) => {
               if (err) {
                 // Ignore errors for tables that already exist
-                if (err.message.includes('already exists') || err.message.includes('no such table')) {
-                  console.log(`Migration statement ${index + 1} skipped: ${err.message}`);
+                if (
+                  err.message.includes('already exists') ||
+                  err.message.includes('no such table')
+                ) {
+                  console.log(
+                    `Migration statement ${index + 1} skipped: ${err.message}`
+                  );
                 } else {
                   console.error(
                     `Migration statement ${index + 1} failed:`,
@@ -44,7 +49,7 @@ export const initializeDatabase = () => {
                   return;
                 }
               }
-              
+
               completed++;
               if (completed === total) {
                 console.log('Database initialized successfully on Vercel');

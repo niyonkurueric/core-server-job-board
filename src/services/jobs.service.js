@@ -1,7 +1,13 @@
-import openDb from '../config/db.js';
+import openDb from '../config/db.vercel.js';
 
 class JobsService {
-  getAllJobs({ page = 1, pageSize = 10, search = '', location = '' } = {}) {
+  getAllJobs({
+    page = 1,
+    pageSize = 10,
+    search = '',
+    location = '',
+    status = '',
+  } = {}) {
     const offset = (page - 1) * pageSize;
     let query = `SELECT * FROM jobs`;
     const params = [];
@@ -13,6 +19,10 @@ class JobsService {
     if (location) {
       filters.push('location = ?');
       params.push(location);
+    }
+    if (status) {
+      filters.push('status = ?');
+      params.push(status);
     }
     if (filters.length) {
       query += ' WHERE ' + filters.join(' AND ');
@@ -36,7 +46,15 @@ class JobsService {
     });
   }
 
-  createJob({ title, description, company, location, deadline, created_by }) {
+  createJob({
+    title,
+    description,
+    company,
+    location,
+    deadline,
+    status,
+    created_by,
+  }) {
     return new Promise((resolve, reject) => {
       openDb.run(
         `INSERT INTO jobs (title, description, company, location, deadline, status, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -46,6 +64,7 @@ class JobsService {
           company || '',
           location || '',
           deadline,
+          status,
           created_by,
         ],
         function (err) {
@@ -64,11 +83,19 @@ class JobsService {
     });
   }
 
-  updateJob(id, { title, description, company, location, deadline }) {
+  updateJob(id, { title, description, company, location, deadline, status }) {
     return new Promise((resolve, reject) => {
       openDb.run(
-        `UPDATE jobs SET title = ?, description = ?, company = ?, location = ?, deadline = ? WHERE id = ?`,
-        [title, description, company || '', location || '', deadline, id],
+        `UPDATE jobs SET title = ?, description = ?, company = ?, location = ?, deadline = ?, status = ? WHERE id = ?`,
+        [
+          title,
+          description,
+          company || '',
+          location || '',
+          deadline,
+          status,
+          id,
+        ],
         function (err) {
           if (err) return reject(err);
           resolve(this.changes);

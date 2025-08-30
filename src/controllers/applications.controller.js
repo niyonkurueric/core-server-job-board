@@ -41,17 +41,60 @@ export const apply = async (req, res, next) => {
       // fallback to jobId if job fetch fails
     }
 
-    // Send email notification (to admin or applicant)
+    // Send email notification to applicant
     try {
       await sendMail({
         to: req.user.email,
-        subject: 'Application Submitted',
-        text: `Your application for job "${jobTitle}" was submitted successfully!`,
-        html: `<p>Your application for job <b>${jobTitle}</b> was submitted successfully!</p>`,
+        subject: 'Application Submitted Successfully',
+        text: `Your application for job "${jobTitle}" was submitted successfully! We will review your application and get back to you soon.`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #2c3e50;">Application Submitted Successfully!</h2>
+            <p>Dear ${req.user.name || 'Applicant'},</p>
+            <p>Your application for the position of <strong>${jobTitle}</strong> has been submitted successfully.</p>
+            <p>We will review your application and get back to you within 3-5 business days.</p>
+            <hr style="border: 1px solid #ecf0f1; margin: 20px 0;">
+            <p style="color: #7f8c8d; font-size: 14px;">
+              This is an automated message. Please do not reply to this email.
+            </p>
+          </div>
+        `,
       });
     } catch (mailErr) {
-      // Log but do not block response
-      console.error('Failed to send application email:', mailErr.message);
+      console.error(
+        'Failed to send application confirmation email:',
+        mailErr.message
+      );
+    }
+
+    // Send notification email to admin (if admin email is configured)
+    try {
+      const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
+      if (adminEmail && adminEmail !== req.user.email) {
+        await sendMail({
+          to: adminEmail,
+          subject: `New Job Application: ${jobTitle}`,
+          text: `A new application has been submitted for the job "${jobTitle}" by ${req.user.name || req.user.email}.`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #e74c3c;">New Job Application Received</h2>
+              <p><strong>Job:</strong> ${jobTitle}</p>
+              <p><strong>Applicant:</strong> ${req.user.name || 'N/A'} (${req.user.email})</p>
+              <p><strong>Applied:</strong> ${new Date().toLocaleString()}</p>
+              <hr style="border: 1px solid #ecf0f1; margin: 20px 0;">
+              <p style="color: #7f8c8d; font-size: 14px;">
+                Review this application in your admin dashboard.
+              </p>
+            </div>
+          `,
+        });
+        console.log(`Admin notification email sent to ${adminEmail}`);
+      }
+    } catch (mailErr) {
+      console.error(
+        'Failed to send admin notification email:',
+        mailErr.message
+      );
     }
 
     return ok(res, result, 201);

@@ -8,9 +8,12 @@ const swaggerDocument = {
     description: 'API documentation for the Job Board project',
   },
   servers: [
-    // Use the current host and port from .env or default
-    { url: `http://localhost:${process.env.PORT || 5000}` },
-    { url: '/' },
+    // Local development
+    { url: `http://localhost:${process.env.PORT || 5000}`, description: 'Local Development' },
+    // Vercel production
+    { url: 'https://core-server-job-board-5pdxz1w9s-niyonkuruerics-projects.vercel.app', description: 'Production (Vercel)' },
+    // Generic fallback
+    { url: '/', description: 'Current Host' },
   ],
   paths: {
     '/api/auth/register': {
@@ -321,5 +324,22 @@ const swaggerDocument = {
 };
 
 export default (app) => {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  // Configure Swagger for both local and Vercel environments
+  const options = {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Job Board API Documentation',
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+      filter: true,
+      deepLinking: true,
+    },
+  };
+
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
+  
+  // Add a redirect from root to API docs for easier access
+  app.get('/', (req, res) => {
+    res.redirect('/api-docs');
+  });
 };

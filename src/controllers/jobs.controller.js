@@ -17,6 +17,22 @@ export const listJobs = async (req, res, next) => {
   }
 };
 
+export const listPublishedJobs = async (req, res, next) => {
+  try {
+    const { page = 1, pageSize = 10, search = '', location = '' } = req.query;
+    const jobs = await jobsService.getAllJobs({
+      page: Number(page),
+      pageSize: Number(pageSize),
+      status: 'published',
+      search,
+      location,
+    });
+    return res.json({ success: true, data: jobs });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getJob = async (req, res, next) => {
   try {
     const job = await jobsService.getJobById(req.params.id);
@@ -29,10 +45,19 @@ export const getJob = async (req, res, next) => {
 
 export const createJob = async (req, res, next) => {
   try {
-    const { error, value } = jobSchema.validate(req.body);
+    const { error, value } = jobSchema.validate({
+      ...req.body,
+      status: req.body.status || 'draft',
+    });
+
     if (error) return fail(res, error.details[0].message, 400);
 
-    const payload = { ...value, created_by: req.user.id };
+    const payload = {
+      ...value,
+      status: req.body.status || 'draft',
+      created_by: req.user.id,
+    };
+
     const job = await jobsService.createJob(payload);
     return ok(res, job, 201);
   } catch (err) {

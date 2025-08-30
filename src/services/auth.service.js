@@ -1,4 +1,4 @@
-import openDb from '../config/db.js';
+import openDb from '../config/db.vercel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { verifyFirebaseToken } from './firebase.service.js';
@@ -66,7 +66,12 @@ export const login = async ({ email, password, idToken }) => {
               );
               resolve({
                 token,
-                user: { id: user.id, email: user.email, role: user.role },
+                user: {
+                  id: user.id,
+                  email: user.email,
+                  role: user.role,
+                  name: user.name,
+                },
               });
             }
           }
@@ -95,7 +100,12 @@ export const login = async ({ email, password, idToken }) => {
         );
         resolve({
           token,
-          user: { id: user.id, email: user.email, role: user.role },
+          user: {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            name: user.name,
+          },
         });
       }
     );

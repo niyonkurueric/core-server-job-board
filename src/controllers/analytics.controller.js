@@ -1,4 +1,4 @@
-import openDb from '../config/db.js';
+import openDb from '../config/db.vercel.js';
 
 export const getAnalytics = async (req, res, next) => {
   try {

@@ -69,6 +69,19 @@ class JobsService {
     });
   }
 
+  getAllLocations() {
+    return new Promise((resolve, reject) => {
+      openDb.all(
+        'SELECT DISTINCT location FROM jobs WHERE location IS NOT NULL AND location != ""',
+        [],
+        (err, rows) => {
+          if (err) return reject(err);
+          resolve(rows.map((r) => r.location));
+        }
+      );
+    });
+  }
+
   getJobById(id) {
     return new Promise((resolve, reject) => {
       openDb.get(`SELECT * FROM jobs WHERE id = ?`, [id], (err, row) => {

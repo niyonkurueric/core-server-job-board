@@ -24,7 +24,7 @@ class Database {
           console.error('Could not connect to SQLite database:', err.message);
           reject(err);
         } else {
-          console.log('✅ Connected to SQLite database');
+          console.log(' Connected to SQLite database');
           this.isInitialized = true;
           resolve(this.db);
         }

@@ -8,11 +8,10 @@ const swaggerDocument = {
     description: 'API documentation for the Job Board project',
   },
   servers: [
-    // Local development
-    { url: `http://localhost:${process.env.PORT || 5000}`, description: 'Local Development' },
-    // Vercel production
-    { url: 'https://core-server-job-board-5pdxz1w9s-niyonkuruerics-projects.vercel.app', description: 'Production (Vercel)' },
-    // Generic fallback
+    {
+      url: `http://localhost:${process.env.PORT}`,
+      description: 'Local Development',
+    },
     { url: '/', description: 'Current Host' },
   ],
   paths: {
@@ -163,6 +162,31 @@ const swaggerDocument = {
           201: { description: 'Job created' },
           400: { description: 'Invalid input' },
           403: { description: 'Forbidden' },
+        },
+      },
+    },
+    '/api/jobs/locations': {
+      get: {
+        summary: 'Get all unique job locations',
+        tags: ['Jobs'],
+        responses: {
+          200: {
+            description: 'List of unique job locations',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean' },
+                    data: {
+                      type: 'array',
+                      items: { type: 'string' },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -324,7 +348,6 @@ const swaggerDocument = {
 };
 
 export default (app) => {
-  // Configure Swagger for both local and Vercel environments
   const options = {
     customCss: '.swagger-ui .topbar { display: none }',
     customSiteTitle: 'Job Board API Documentation',
@@ -336,9 +359,12 @@ export default (app) => {
     },
   };
 
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
-  
-  // Add a redirect from root to API docs for easier access
+  app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument, options)
+  );
+
   app.get('/', (req, res) => {
     res.redirect('/api-docs');
   });

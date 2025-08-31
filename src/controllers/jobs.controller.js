@@ -43,6 +43,15 @@ export const getJob = async (req, res, next) => {
   }
 };
 
+export const getAllLocations = async (req, res, next) => {
+  try {
+    const locations = await jobsService.getAllLocations();
+    return res.json({ success: true, data: locations });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const createJob = async (req, res, next) => {
   try {
     const { error, value } = jobSchema.validate({

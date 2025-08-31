@@ -12,11 +12,12 @@ class JobsService {
     const params = [];
     const filters = [];
 
-    // Base query with LEFT JOIN to count applicants
+    // Base query with LEFT JOIN
     let query = `
     SELECT 
       j.*, 
-      COUNT(a.id) AS totalApplicants
+      COUNT(a.id) AS totalApplicants,
+      COALESCE(GROUP_CONCAT(a.userId), '') AS appliedUserIds
     FROM jobs j
     LEFT JOIN applications a ON a.jobId = j.id
   `;
@@ -54,6 +55,15 @@ class JobsService {
     return new Promise((resolve, reject) => {
       openDb.all(query, params, (err, rows) => {
         if (err) return reject(err);
+
+        // Optionally convert appliedUserIds into array of numbers
+        rows = rows.map((row) => ({
+          ...row,
+          appliedUserIds: row.appliedUserIds
+            ? row.appliedUserIds.split(',').map(Number)
+            : [],
+        }));
+
         resolve(rows);
       });
     });

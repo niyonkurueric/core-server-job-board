@@ -1,6 +1,7 @@
 import { jobSchema } from '../validations/validators.js';
 import { ok, fail } from '../utils/response.js';
 import jobsService from '../services/jobs.service.js';
+import applicationsService from '../services/applications.service.js';
 
 export const listJobs = async (req, res, next) => {
   try {
@@ -89,6 +90,16 @@ export const updateJob = async (req, res, next) => {
 
 export const deleteJob = async (req, res, next) => {
   try {
+    const applications = await applicationsService.getApplicationsByJob(
+      req.params.id
+    );
+    if (applications && applications.length > 0) {
+      return fail(
+        res,
+        'Cannot delete job: at least one user has applied to this job.',
+        400
+      );
+    }
     const changes = await jobsService.deleteJob(req.params.id);
     if (!changes) return fail(res, 'Job not found', 404);
     return ok(res, { id: Number(req.params.id) });

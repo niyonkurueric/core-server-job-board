@@ -71,9 +71,30 @@ class JobsService {
 
   getAllLocations() {
     return new Promise((resolve, reject) => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // midnight today
+      const todayTimestamp = today.getTime();
+
+      const filters = [];
+      const params = [];
+
+      filters.push('status = ?');
+      params.push('published');
+
+      filters.push('deadline >= ?');
+      params.push(todayTimestamp);
+
+      const whereClause = filters.length
+        ? `WHERE ${filters.join(' AND ')}`
+        : '';
+
       openDb.all(
-        'SELECT DISTINCT location FROM jobs WHERE location IS NOT NULL AND location != ""',
-        [],
+        `SELECT DISTINCT location 
+       FROM jobs 
+       ${whereClause}
+       AND location IS NOT NULL 
+       AND location != ""`,
+        params,
         (err, rows) => {
           if (err) return reject(err);
           resolve(rows.map((r) => r.location));

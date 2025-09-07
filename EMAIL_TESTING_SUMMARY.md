@@ -15,12 +15,6 @@
 - **Content**: Professional confirmation with job details
 - **Status**: ✅ Working
 
-#### Admin Notification Email
-- **Recipient**: Admin (niyonkurufamous@gmail.com)
-- **Subject**: "New Job Application: [Job Title]"
-- **Content**: Application details for admin review
-- **Status**: ✅ Working
-
 ## 📧 Email Flow When User Applies for Job
 
 1. **User submits job application**
